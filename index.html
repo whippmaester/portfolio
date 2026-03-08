@@ -1,1 +1,772 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kaleb — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --surface: #111114;
+      --surface2: #18181d;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8f04e;
+      --accent2: #f04e9a;
+      --text: #e8e8e0;
+      --muted: #6b6b72;
+      --mono: 'Space Mono', monospace;
+      --serif: 'Playfair Display', serif;
+    }
+
+```
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.7;
+  cursor: none;
+  overflow-x: hidden;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 36px; height: 36px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  position: fixed;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: all 0.15s ease;
+  opacity: 0.5;
+}
+body:hover .cursor { opacity: 1; }
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(10,10,11,0.95), transparent);
+}
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-style: italic;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--accent); }
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(200,240,78,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,240,78,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridPulse 8s ease-in-out infinite;
+}
+@keyframes gridPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.hero-orb {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(200,240,78,0.08) 0%, transparent 70%);
+  right: -100px; top: 50%;
+  transform: translateY(-50%);
+  animation: orbFloat 6s ease-in-out infinite;
+}
+.hero-orb2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(240,78,154,0.06) 0%, transparent 70%);
+  left: 30%; top: 10%;
+  animation: orbFloat 9s ease-in-out infinite reverse;
+}
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(-50%) scale(1); }
+  50% { transform: translateY(calc(-50% - 30px)) scale(1.05); }
+}
+
+.hero-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-name {
+  font-family: var(--serif);
+  font-size: clamp(64px, 10vw, 140px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.4s forwards;
+}
+.hero-name em {
+  font-style: italic;
+  color: var(--accent);
+}
+.hero-desc {
+  max-width: 520px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.8;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.6s forwards;
+  margin-bottom: 48px;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border: 1px solid var(--accent);
+  padding: 14px 28px;
+  transition: all 0.3s;
+  opacity: 0;
+  animation: fadeUp 0.8s 0.8s forwards;
+}
+.hero-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+.hero-cta::after {
+  content: '→';
+  transition: transform 0.3s;
+}
+.hero-cta:hover::after { transform: translateX(4px); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SECTIONS */
+section {
+  padding: 120px 48px;
+  position: relative;
+}
+.section-label {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 64px;
+}
+
+/* ABOUT */
+#about {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+  max-width: 1100px;
+}
+.about-text p {
+  color: var(--muted);
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.9;
+}
+.about-text p strong { color: var(--text); }
+.about-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.fact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.fact-label { color: var(--muted); }
+.fact-value { color: var(--text); text-align: right; }
+
+/* SKILLS */
+#skills {
+  border-top: 1px solid var(--border);
+}
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2px;
+  max-width: 1100px;
+}
+.skill-card {
+  background: var(--surface);
+  padding: 32px;
+  border: 1px solid var(--border);
+  transition: border-color 0.3s, transform 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 0;
+  background: var(--accent);
+  transition: height 0.4s ease;
+}
+.skill-card:hover::before { height: 100%; }
+.skill-card:hover { border-color: rgba(200,240,78,0.2); transform: translateY(-2px); }
+.skill-icon {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+.skill-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  font-family: var(--serif);
+  font-style: italic;
+}
+.skill-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* PROJECTS */
+#projects {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.projects-list {
+  max-width: 1100px;
+}
+.project-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 32px;
+  align-items: center;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+  text-decoration: none;
+  color: inherit;
+}
+.project-item:first-child { border-top: 1px solid var(--border); }
+.project-item:hover .project-num { color: var(--accent); }
+.project-item:hover .project-arrow { transform: translate(4px, -4px); opacity: 1; }
+.project-num {
+  font-size: 12px;
+  color: var(--muted);
+  transition: color 0.3s;
+  letter-spacing: 0.1em;
+}
+.project-info { }
+.project-name {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 8px;
+  transition: color 0.3s;
+}
+.project-item:hover .project-name { color: var(--accent); }
+.project-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tag {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+}
+.project-arrow {
+  font-size: 20px;
+  color: var(--accent);
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+/* EXPERIENCE */
+#experience {
+  border-top: 1px solid var(--border);
+}
+.exp-list {
+  max-width: 800px;
+}
+.exp-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+  padding: 48px 0;
+  border-bottom: 1px solid var(--border);
+}
+.exp-item:first-child { border-top: 1px solid var(--border); }
+.exp-date {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  padding-top: 4px;
+}
+.exp-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.exp-company {
+  color: var(--accent);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.exp-desc {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* CONTACT */
+#contact {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.contact-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+.contact-title {
+  font-family: var(--serif);
+  font-size: clamp(48px, 8vw, 100px);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+}
+.contact-title span { color: var(--accent); }
+.contact-email {
+  display: inline-block;
+  font-size: 16px;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+  margin-bottom: 48px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.contact-email:hover { color: var(--accent); border-color: var(--accent); }
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+.social-link {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.social-link:hover { color: var(--accent); }
+
+/* FOOTER */
+footer {
+  padding: 32px 48px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+/* SCROLL REVEALS */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+@media (max-width: 768px) {
+  nav { padding: 20px 24px; }
+  .nav-links { display: none; }
+  #hero { padding: 0 24px 60px; }
+  section { padding: 80px 24px; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .exp-item { grid-template-columns: 1fr; gap: 8px; }
+  .project-item { grid-template-columns: 60px 1fr auto; gap: 16px; }
+  footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+
+  <nav>
+    <a href="#hero" class="nav-logo">Kaleb.</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+
+  <section id="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb2"></div>
+    <p class="hero-eyebrow">Creative / Technical</p>
+    <h1 class="hero-name">
+      Kaleb<br><em>Makes Things.</em>
+    </h1>
+    <p class="hero-desc">
+      Music producer, generative artist, and technologist exploring the edges of sound, code, and imagination.
+    </p>
+    <a href="#projects" class="hero-cta">View My Work</a>
+  </section>
+
+  <!-- ABOUT -->
+
+  <section id="about">
+    <div class="about-grid">
+      <div>
+        <p class="section-label">About Me</p>
+        <h2 class="section-title">Building at the intersection of <em style="font-style:italic;color:var(--accent)">sound & sight.</em></h2>
+        <div class="about-text">
+          <p>I'm a <strong>creative technologist</strong> driven by curiosity — whether that means crafting synth textures in Logic Pro, generating living visual art in code, or diving deep into how systems work and why civilizations rise and fall.</p>
+          <p>My work lives where disciplines collide. I'm equally at home writing code and sculpting sound, looking for the moments where <strong>technology becomes art</strong> and art becomes experience.</p>
+          <p>When I'm not producing or building, you'll find me reading about Byzantine history, exploring new AI tools, or wrangling rogue squirrels in elf costumes.</p>
+        </div>
+      </div>
+      <div class="about-facts reveal">
+        <div class="fact">
+          <span class="fact-label">Focus</span>
+          <span class="fact-value">Music Production / Generative Art</span>
+        </div>
+        <div class="fact">
+          <span class="fact-label">Primary DAW</span>
+          <span class="fact-value">Logic Pro (iPad)</span>
+        </div>
+        <div class="fact">
+          <span class="fact-label">Visual Medium</span>
+          <span class="fact-value">Generative / SVG / Code Art</span>
+        </div>
+        <div class="fact">
+          <span class="fact-label">Interests</span>
+          <span class="fact-value">History · AI · Creative Tech</span>
+        </div>
+        <div class="fact">
+          <span class="fact-label">Available For</span>
+          <span class="fact-value">Collaborations & Projects</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+
+  <section id="skills">
+    <p class="section-label">What I Do</p>
+    <h2 class="section-title">Skills & Tools</h2>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon">🎛️</div>
+        <div class="skill-name">Music Production</div>
+        <div class="skill-desc">Synthesizer design, sound sculpting, velocity control, and beat construction in Logic Pro for iPad.</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">✦</div>
+        <div class="skill-name">Generative Art</div>
+        <div class="skill-desc">Creating visual systems with code — SVG, parametric design, and algorithmically-driven aesthetics.</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">⚡</div>
+        <div class="skill-name">Creative Coding</div>
+        <div class="skill-desc">Turning ideas into interactive experiences using JavaScript, CSS, and modern web technologies.</div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🤖</div>
+        <div class="skill-name">AI Collaboration</div>
+        <div class="skill-desc">Leveraging AI tools as creative partners — from ideation to production-ready outputs across disciplines.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+
+  <section id="projects">
+    <p class="section-label">Selected Work</p>
+    <h2 class="section-title">Projects</h2>
+    <div class="projects-list">
+      <a href="#" class="project-item reveal">
+        <span class="project-num">01</span>
+        <div class="project-info">
+          <div class="project-name">Earth's Guardians</div>
+          <div class="project-tags">
+            <span class="tag">Generative Art</span>
+            <span class="tag">SVG</span>
+            <span class="tag">Creative Writing</span>
+          </div>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+      <a href="#" class="project-item reveal">
+        <span class="project-num">02</span>
+        <div class="project-info">
+          <div class="project-name">Synth Studies</div>
+          <div class="project-tags">
+            <span class="tag">Music Production</span>
+            <span class="tag">Logic Pro</span>
+            <span class="tag">Sound Design</span>
+          </div>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+      <a href="#" class="project-item reveal">
+        <span class="project-num">03</span>
+        <div class="project-info">
+          <div class="project-name">Interactive Visual Experiments</div>
+          <div class="project-tags">
+            <span class="tag">Creative Code</span>
+            <span class="tag">Web</span>
+            <span class="tag">Animation</span>
+          </div>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+      <a href="#" class="project-item reveal">
+        <span class="project-num">04</span>
+        <div class="project-info">
+          <div class="project-name">Add Your Project Here</div>
+          <div class="project-tags">
+            <span class="tag">Your Tags</span>
+          </div>
+        </div>
+        <span class="project-arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+
+  <section id="experience">
+    <p class="section-label">Background</p>
+    <h2 class="section-title">Experience</h2>
+    <div class="exp-list">
+      <div class="exp-item reveal">
+        <div class="exp-date">2023 — Present</div>
+        <div>
+          <div class="exp-title">Creative Technologist</div>
+          <div class="exp-company">Independent / Freelance</div>
+          <div class="exp-desc">Developing generative art systems, producing original music, and building experimental web experiences at the intersection of technology and creative expression.</div>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-date">Add Your Role</div>
+        <div>
+          <div class="exp-title">Your Title Here</div>
+          <div class="exp-company">Your Company / Studio</div>
+          <div class="exp-desc">Describe your role, responsibilities, and what you built or achieved. Update this section with your actual work history.</div>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-date">Add Your Role</div>
+        <div>
+          <div class="exp-title">Another Title</div>
+          <div class="exp-company">Another Organization</div>
+          <div class="exp-desc">More of your background. Education, internships, collaborations — anything that tells your story.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+
+  <section id="contact">
+    <div class="contact-inner reveal">
+      <h2 class="contact-title">Let's <span>Talk.</span></h2>
+      <p style="color: var(--muted); margin-bottom: 32px; font-size: 14px;">Have a project or collaboration in mind? I'd love to hear about it.</p>
+      <a href="mailto:hello@kaleb.com" class="contact-email">hello@kaleb.com</a>
+      <div class="social-links">
+        <a href="#" class="social-link">Twitter</a>
+        <a href="#" class="social-link">GitHub</a>
+        <a href="#" class="social-link">Instagram</a>
+        <a href="#" class="social-link">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+    <span>© 2026 Kaleb. All rights reserved.</span>
+    <span>Designed & Built with intention.</span>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        ring.style.width = '50px';
+        ring.style.height = '50px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '10px';
+        cursor.style.height = '10px';
+        ring.style.width = '36px';
+        ring.style.height = '36px';
+      });
+    });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
